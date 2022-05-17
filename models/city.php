@@ -13,9 +13,9 @@ class City
         $this->data_base = $db;
     }
 
-    function get()
+    function get($limit, $offset)
     {
-        $query = "SELECT * fROM ". $this -> table_name;
+        $query = "SELECT * fROM ". $this -> table_name ." LIMIT $limit OFFSET $offset ";
         $statement = $this -> data_base -> prepare($query);
         $statement -> execute();
 

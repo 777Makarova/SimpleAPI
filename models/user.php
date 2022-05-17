@@ -15,10 +15,22 @@ class User
         $this->conn = $db;
     }
 
-    function get()
+    function get($limit, $offset)
     {
 
-        $query = "SELECT * FROM " . $this->table_name ;
+        $query = "SELECT * FROM " . $this->table_name . " LIMIT $limit OFFSET $offset ";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function getlist($city_id)
+    {
+
+        $query = "SELECT * FROM " . $this->table_name . " WHERE city_id=$city_id";
 
         $stmt = $this->conn->prepare($query);
 

@@ -4,48 +4,42 @@ header("Content-Type: application/json; charset=UTF-8");
 
 
 include_once '../config/database.php';
-include_once '../models/city.php';
+include_once '../models/user.php';
 
 $database = new Database();
 $db = $database->getConnection();
 
-$city = new City($db);
+$user = new User($db);
 
-$page = $_GET['page'] ?? 1;
-$limit = 2;
-$offset = $limit * ($page-1);
+$city_id = $_GET['city_id'];
 
-$statement = $city->get($limit, $offset);
-$num = $statement->rowCount();
-
-echo($num);
+$stmt = $user->getlist($city_id);
+$num = $stmt->rowCount();
 
 if ($num > 0) {
 
-//    echo 1;
-    $city_arr = array();
-    $city_arr["items"] = array();
+    $user_arr = array();
+    $user_arr["items"] = array();
 
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         // извлекаем строку
-//        extract($row, 1);
         extract($row, EXTR_OVERWRITE);
 
-        $city_item = array(
+        $user_item = array(
             "id" => $id,
             "name" => $name,
+            "city_id" => $city_id,
         );
-//        print_r($city_item);
 
-        $city_arr["items"][] = $city_item;
-//        print_r($city_arr);
+        $user_arr["items"][] = $user_item;
     }
 
     http_response_code(200);
 
     try {
-        echo json_encode($city_arr, JSON_THROW_ON_ERROR);
+        echo json_encode($user_arr, JSON_THROW_ON_ERROR);
     } catch (JsonException $e) {
     }
 

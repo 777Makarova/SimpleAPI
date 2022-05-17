@@ -11,8 +11,11 @@ $db = $database->getConnection();
 
 $user = new User($db);
 
+$page = $_GET['page'] ?? 1;
+$limit = 2;
+$offset = $limit * ($page-1);
 
-$stmt = $user->get();
+$stmt = $user->get($limit, $offset);
 $num = $stmt->rowCount();
 
 if ($num > 0) {
